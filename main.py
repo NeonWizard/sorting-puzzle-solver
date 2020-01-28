@@ -33,8 +33,7 @@ def main():
 	print()
 
 	print("Currently supported colors:")
-	for x in config.colorMap:
-		if (type(x) != str): continue
+	for x in config.colors:
 		print("\t- {}".format(x))
 	print()
 
@@ -51,8 +50,11 @@ def main():
 		if len(inp) != 4:
 			print("Vial must contain 4 elements!")
 			continue
+		if not all([x in config.colors for x in inp]):
+			print("Input contains an invalid color.")
+			continue
 
-		puzzle.append([config.colorMap[x.lower()] for x in inp])
+		puzzle.append(inp)
 		i += 1
 
 	puzzle += [[], []]

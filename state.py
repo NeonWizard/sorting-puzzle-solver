@@ -10,7 +10,7 @@ class State:
 	def __str__(self):
 		out = ""
 		for i, vial in enumerate(self.vials):
-			out += "Vial {}: {}".format(i+1, "|".join(config.colorMap[x] for x in vial)) + "\n"
+			out += "Vial {}: {}".format(i+1, "|".join(vial)) + "\n"
 		return out.rstrip("\n")
 
 	# - heuristics
