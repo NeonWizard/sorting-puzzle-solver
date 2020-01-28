@@ -37,7 +37,7 @@ def main():
 		print("\t- {}".format(x))
 	print()
 
-	vials = int(input("How many vials: "))
+	vials = int(input("How many vials (excluding 2 empty): "))
 	print()
 
 	print("Please be sure to consult the above color map, and type")
