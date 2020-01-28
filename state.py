@@ -4,6 +4,7 @@ import copy
 class State:
 	def __init__(self, vials):
 		self.vials = copy.deepcopy(vials)
+		self._heuristic = None
 
 	# - display function
 	def __str__(self):
@@ -12,14 +13,19 @@ class State:
 			out += "Vial {}: {}".format(i+1, "|".join(config.colorMap[x] for x in vial)) + "\n"
 		return out.rstrip("\n")
 
+	# - heuristics
+	def __lt__(self, rhs):
+		return self.heuristic() < rhs.heuristic()
 	def __eq__(self, rhs):
 		return self.vials == rhs.vials
 
 	def heuristic(self):
-		val = 0
+		if self._heuristic: return self._heuristic
+
+		self._heuristic = 0
 		for vial in self.vials:
-			val += len(set(vial)) - 1
-		return val
+			self._heuristic += len(set(vial)) - 1
+		return self._heuristic
 
 
 def main():

@@ -8,6 +8,10 @@ class Node:
 
 		self.children = []
 
+	# - heuristic
+	def __lt__(self, rhs):
+		return self.state < rhs.state
+
 	def addChild(self, node):
 		self.children.append(node)
 	def removeChild(self, node):

@@ -37,7 +37,9 @@ class Problem:
 		while node.state != self.initialState:
 			solution.append(node)
 			node = node.parent
+
 		for node in solution[::-1]:
+			print("= Step {} =".format(node.totalDepth))
 			print(node.action)
 			print(node.state)
 			print()

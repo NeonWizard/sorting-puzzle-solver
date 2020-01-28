@@ -57,7 +57,7 @@ def main():
 
 	puzzle += [[], []]
 
-	solve(puzzle, Graph, BFFrontier)
+	solve(puzzle, Graph, HFFrontier)
 
 if __name__ == "__main__":
 	main()
