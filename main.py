@@ -5,6 +5,7 @@ from frontiers import *
 from algorithms import *
 
 import config
+import time
 
 def solve(puzzle, algorithm, frontier):
 	state = State(puzzle) # initial state
@@ -13,19 +14,18 @@ def solve(puzzle, algorithm, frontier):
 	frontier = frontier()
 	algorithm = algorithm(problem, frontier)
 
+	startTime = time.time()
 	result = algorithm.search()
+	endTime = time.time()
+
 	print()
 	problem.printPath(result)
 	print()
-	if (result):
-		print("Path cost:\t\t{}".format(result.totalDepth))
-		print("Nodes generated:\t{}".format(algorithm.numNodesGenerated))
-		print("Nodes stored:\t\t{}".format(algorithm.maxNodesStored))
-	else:
-		print("Path cost:\t\t{}".format(-1))
-		print("Nodes generated:\t{}".format(algorithm.numNodesGenerated))
-		print("Nodes stored:\t\t{}".format(algorithm.maxNodesStored))
 
+	print("Path cost:\t\t\t{}".format(result.totalDepth if result else -1))
+	print("Nodes generated:\t{}".format(algorithm.numNodesGenerated))
+	print("Nodes stored:\t\t{}".format(algorithm.maxNodesStored))
+	print("Time elapsed:\t\t{} seconds".format(round(endTime-startTime, 3)))
 	print()
 
 def main():
@@ -44,6 +44,7 @@ def main():
 	print("colors (space separated) from bottom of vial to top.")
 	print()
 	puzzle = []
+	verifyMap = {}
 	i = 0
 	while i < vials:
 		inp = input("Vial {} contents: ".format(i+1)).split()
@@ -54,10 +55,17 @@ def main():
 			print("Input contains an invalid color.")
 			continue
 
+		for x in inp:
+			verifyMap[x] = verifyMap.get(x, 0) + 1
+
 		puzzle.append(inp)
 		i += 1
 
-	puzzle += [[], []]
+	if not all([x == 4 for x in verifyMap.values()]):
+		print("Puzzle state is not valid.")
+		return
+
+	puzzle += [[], []] # add empty vials
 
 	solve(puzzle, Graph, HFFrontier)
 
