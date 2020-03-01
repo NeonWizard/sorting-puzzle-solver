@@ -49,7 +49,7 @@ class BFFrontier(Frontier):
 	def size(self):
 		return len(self._arr)
 
-class HFFrontier(Frontier):
+class HFrontier(Frontier):
 	def __init__(self):
 		self._arr = []
 
@@ -66,8 +66,8 @@ class HFFrontier(Frontier):
 
 
 def main():
-	hff = HFFrontier()
-	print(hff.empty())
+	hf = HFrontier()
+	print(hf.empty())
 
 if __name__ == "__main__":
 	main()

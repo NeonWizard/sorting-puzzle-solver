@@ -1,7 +1,7 @@
 from state import State
 from problem import Problem
 
-from frontiers import *
+import frontiers
 from algorithms import *
 
 import config
@@ -22,9 +22,9 @@ def solve(puzzle, algorithm, frontier):
 	problem.printPath(result)
 	print()
 
-	print("Path cost:\t\t\t{}".format(result.totalDepth if result else -1))
+	print("Path cost:\t\t{}".format(result.totalDepth if result else -1))
 	print("Nodes generated:\t{}".format(algorithm.numNodesGenerated))
-	print("Nodes stored:\t\t{}".format(algorithm.maxNodesStored))
+	print("Max nodes stored:\t{}".format(algorithm.maxNodesStored))
 	print("Time elapsed:\t\t{} seconds".format(round(endTime-startTime, 3)))
 	print()
 
@@ -35,6 +35,22 @@ def main():
 	print("Currently supported colors:")
 	for x in config.colors:
 		print("\t- {}".format(x))
+	print()
+
+	print("Which frontier?")
+	print("\tDFF - Depth First")
+	print("\tBFF - Breadth First")
+	print("\tHF - Heuristic")
+	frontierStr = input(">>> ").lower()
+	if (frontierStr == "dff"):
+		frontier = frontiers.DFFrontier
+	elif (frontierStr == "bff"):
+		frontier = frontiers.BFFrontier
+	elif (frontierStr == "hf"):
+		frontier = frontiers.HFrontier
+	else:
+		print("Invalid frontier option.")
+		return
 	print()
 
 	vials = int(input("How many vials (excluding 2 empty): "))
@@ -67,7 +83,7 @@ def main():
 
 	puzzle += [[], []] # add empty vials
 
-	solve(puzzle, Graph, HFFrontier)
+	solve(puzzle, Graph, frontier)
 
 if __name__ == "__main__":
 	main()
