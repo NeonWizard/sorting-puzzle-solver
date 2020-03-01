@@ -1,6 +1,25 @@
 import bisect
+from abc import ABC, abstractmethod
 
-class DFFrontier:
+class Frontier(ABC):
+	@abstractmethod
+	def insert(self, node_in):
+		pass
+	@abstractmethod
+	def remove(self):
+		pass
+
+	@abstractmethod
+	def empty(self):
+		pass
+
+	@abstractmethod
+	def size(self):
+		pass
+
+# ========================
+
+class DFFrontier(Frontier):
 	def __init__(self):
 		self._arr = []
 
@@ -15,7 +34,7 @@ class DFFrontier:
 	def size(self):
 		return len(self._arr)
 
-class BFFrontier:
+class BFFrontier(Frontier):
 	def __init__(self):
 		self._arr = []
 
@@ -30,7 +49,7 @@ class BFFrontier:
 	def size(self):
 		return len(self._arr)
 
-class HFFrontier:
+class HFFrontier(Frontier):
 	def __init__(self):
 		self._arr = []
 
@@ -44,3 +63,11 @@ class HFFrontier:
 
 	def size(self):
 		return len(self._arr)
+
+
+def main():
+	hff = HFFrontier()
+	print(hff.empty())
+
+if __name__ == "__main__":
+	main()
