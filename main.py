@@ -10,7 +10,7 @@ import time
 def solve(puzzle, algorithm, frontier):
 	state = State(puzzle) # initial state
 	problem = Problem(state)
-	
+
 	frontier = frontier()
 	algorithm = algorithm(problem, frontier)
 
