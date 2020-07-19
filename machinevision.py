@@ -30,21 +30,38 @@ while True:
 			# Draw a small circle (of radius 1) to show the center.
 			cv2.circle(output, (a, b), 1, (0, 0, 255), 3)
 
+			# cut out interior of circle
 			height, width, _ = frame.shape
 			mask = np.zeros((height, width), np.uint8)
 
-			circle_img = cv2.circle(mask, (a, b), r, (255, 255, 255), thickness=-1)
+			# draw on mask
+			cv2.circle(mask, (a, b), r, (255, 255, 255), thickness=-1)
+
+			# copy image using mask
 			masked_data = cv2.bitwise_and(frame, frame, mask=mask)
 
+			# apply threshold
 			_, thresh = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY)
 
+			# find contours
 			contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
 			x, y, w, h = cv2.boundingRect(contours[0])
 
 			crop = masked_data[y:y+h, x:x+w]
 
+			cv2.imshow("extra", crop)
+
+			# ensure uniform color distribution in circle
+			for pixel in masked_data:
+				# print(pixel)
+				pass
+
 	cv2.imshow("main", output)
-	cv2.imshow("extra", crop)
+
+	# -- state validation
+	# TODO: contour match vials to know how many bubbles we should be looking for
+	# check for all circles with uniform color inside
+	# make sure there are two of each color
 
 	k = cv2.waitKey(1)
 	if k%256 == 27:
