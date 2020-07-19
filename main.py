@@ -4,7 +4,6 @@ from problem import Problem
 import frontiers
 from algorithms import *
 
-import config
 import time
 
 def solve(puzzle, algorithm, frontier):
@@ -30,11 +29,6 @@ def solve(puzzle, algorithm, frontier):
 
 def main():
 	print("== Tired of using your brain to solve puzzles? Look no further. ==")
-	print()
-
-	print("Currently supported colors:")
-	for x in config.colors:
-		print("\t- {}".format(x))
 	print()
 
 	print("Which frontier?")
@@ -66,9 +60,6 @@ def main():
 		inp = input("Vial {} contents: ".format(i+1)).split()
 		if len(inp) != 4:
 			print("Vial must contain 4 elements!")
-			continue
-		if not all([x in config.colors for x in inp]):
-			print("Input contains an invalid color.")
 			continue
 
 		for x in inp:

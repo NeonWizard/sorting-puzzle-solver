@@ -33,7 +33,7 @@ class Graph:
 			s1 = node.state
 			if (problem.goalTest(s1)):
 				return node
-			
+
 			self.closed.append(node.state)
 			actions = problem.actions(s1)
 			for action in actions:

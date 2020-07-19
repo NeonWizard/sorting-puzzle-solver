@@ -1,4 +1,3 @@
-import config
 import copy
 
 class State:
