@@ -50,14 +50,13 @@ def main():
 	vials = int(input("How many vials (excluding 2 empty): "))
 	print()
 
-	print("Please be sure to consult the above color map, and type")
-	print("colors (space separated) from bottom of vial to top.")
+	print("Type colors (space separated) from top of vial to bottom.")
 	print()
 	puzzle = []
 	verifyMap = {}
 	i = 0
 	while i < vials:
-		inp = input("Vial {} contents: ".format(i+1)).split()
+		inp = input("Vial {} contents: ".format(i+1)).split()[::-1]
 		if len(inp) != 4:
 			print("Vial must contain 4 elements!")
 			continue
