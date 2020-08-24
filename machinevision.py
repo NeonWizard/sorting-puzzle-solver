@@ -15,6 +15,8 @@ while True:
 	# Apply Hough transform on the blurred image.
 	detected_circles = cv2.HoughCircles(gray_blurred, cv2.HOUGH_GRADIENT, 1, 20, param1=50, param2=30, minRadius=1, maxRadius=40)
 
+	potential_bubbles = [] # (color, position, radius)
+
 	# Draw circles that are detected.
 	if detected_circles is not None:
 		detected_cicles = detected_circles[:80] # cap at 80 detections
@@ -49,12 +51,17 @@ while True:
 
 			crop = masked_data[y:y+h, x:x+w]
 
-			cv2.imshow("extra", crop)
-
 			# ensure uniform color distribution in circle
 			for pixel in masked_data:
 				# print(pixel)
 				pass
+
+			# ensure color distribution in circle is relatively uniform
+			# save average color and circle info to list
+
+	for pbub in potential_bubbles:
+		# filter every bubble that has 3 other bubbles with similar average color
+		pass
 
 	cv2.imshow("main", output)
 
