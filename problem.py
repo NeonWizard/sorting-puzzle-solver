@@ -31,7 +31,7 @@ class Problem:
 	def heuristic(self, state):
 		return state.heuristic()
 
-	def printPath(self, endNode):
+	def printPath(self, endNode, verbose=True):
 		solution = []
 		node = endNode
 		while node.state != self.initialState:
@@ -41,7 +41,8 @@ class Problem:
 		for node in solution[::-1]:
 			print("= Step {} =".format(node.totalDepth))
 			print(node.action)
-			print(node.state)
+			if verbose:
+				print(node.state)
 			print()
 
 

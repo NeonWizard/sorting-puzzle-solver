@@ -6,7 +6,9 @@ from algorithms import *
 
 import time
 
-def solve(puzzle, algorithm, frontier):
+# TODO: add command line arguments for frontier, vial count, etc
+
+def solve(puzzle, algorithm, frontier, verbose=True):
 	state = State(puzzle) # initial state
 	problem = Problem(state)
 
@@ -18,7 +20,7 @@ def solve(puzzle, algorithm, frontier):
 	endTime = time.time()
 
 	print()
-	problem.printPath(result)
+	problem.printPath(result, verbose)
 	print()
 
 	print("Path cost:\t\t{}".format(result.totalDepth if result else -1))
@@ -50,6 +52,18 @@ def main():
 	vials = int(input("How many vials (excluding 2 empty): "))
 	print()
 
+	while True:
+		inp = input("Verbose solution? (Y/N): ").lower()
+		if inp == "y":
+			verbose = True
+			break
+		elif inp == "n":
+			verbose = False
+			break
+		else:
+			print("Invalid option. Please try again.")
+	print()
+
 	print("Type colors (space separated) from top of vial to bottom.")
 	print()
 	puzzle = []
@@ -76,7 +90,7 @@ def main():
 
 	puzzle += [[], []] # add empty vials
 
-	solve(puzzle, Graph, frontier)
+	solve(puzzle, Graph, frontier, verbose)
 
 if __name__ == "__main__":
 	main()
