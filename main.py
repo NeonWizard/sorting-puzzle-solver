@@ -69,6 +69,9 @@ def main():
 
 	if not all([x == 4 for x in verifyMap.values()]):
 		print("Puzzle state is not valid.")
+		for key in verifyMap:
+			if verifyMap[key] != 4:
+				print("There are {} {} bubbles.".format(verifyMap[key], key))
 		return
 
 	puzzle += [[], []] # add empty vials
