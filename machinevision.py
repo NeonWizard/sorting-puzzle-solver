@@ -5,8 +5,9 @@ cam = cv2.VideoCapture(0)
 cv2.namedWindow("main")
 cv2.namedWindow("extra")
 
+frame = cv2.imread("screenshot.jpg")
 while True:
-	ret, frame = cam.read()
+	# ret, frame = cam.read()
 
 	output = frame.copy()
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -51,12 +52,11 @@ while True:
 
 			crop = masked_data[y:y+h, x:x+w]
 
-			# ensure uniform color distribution in circle
+			# ensure relatively uniform color distribution in circle
 			for pixel in masked_data:
 				# print(pixel)
 				pass
 
-			# ensure color distribution in circle is relatively uniform
 			# save average color and circle info to list
 
 	for pbub in potential_bubbles:
@@ -66,9 +66,11 @@ while True:
 	cv2.imshow("main", output)
 
 	# -- state validation
-	# TODO: contour match vials to know how many bubbles we should be looking for
+	# TODO:
+	# contour match vials to know how many bubbles we should be looking for
+	# make sure each bubble is in a vertical group of 3 other bubbles (weed out false flags)
 	# check for all circles with uniform color inside
-	# make sure there are two of each color
+	# make sure there are four of each color
 
 	k = cv2.waitKey(1)
 	if k%256 == 27:
