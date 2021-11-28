@@ -90,6 +90,9 @@ def main():
 
 	puzzle += [[], []] # add empty vials
 
+	print()
+	print("Solving...")
+	print()
 	solve(puzzle, Graph, frontier, verbose)
 
 if __name__ == "__main__":

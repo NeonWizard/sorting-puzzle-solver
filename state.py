@@ -22,6 +22,7 @@ class State:
 		if self._heuristic: return self._heuristic
 
 		self._heuristic = 0
+		# each vial's score is the amount of nonmatching colors
 		for vial in self.vials:
 			self._heuristic += len(set(vial)) - 1
 		return self._heuristic

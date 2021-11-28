@@ -30,6 +30,11 @@ class Graph:
 			# print(str(node.state))
 			# input()
 
+			print("\r", end="")
+			print(f"Nodes generated: {self.numNodesGenerated}; ", end="")
+			print(f"Frontier size: {self.frontier.size()}; ", end="")
+			print(f"Current heuristic: {node.heuristic}", end="")
+
 			s1 = node.state
 			if (problem.goalTest(s1)):
 				return node
