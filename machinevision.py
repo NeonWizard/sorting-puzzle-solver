@@ -93,9 +93,9 @@ if detected_circles is not None:
             for thing in pixel:
                 average_switch = (average_switch + 1) % 4
                 if average_switch == 0:
-                    average[0] += thing[0]
-                    average[1] += thing[1]
-                    average[2] += thing[2]
+                    average[0] += int(thing[0])
+                    average[1] += int(thing[1])
+                    average[2] += int(thing[2])
                     average_count += 1
 
         if (average_count == 0):
@@ -125,6 +125,10 @@ if detected_circles is not None:
 potential_bubbles2 = []
 
 for pbub in potential_bubbles:
+    swag = (pbub["position"][0]-83, pbub["position"][1])
+    cv2.line(output, pbub["position"], swag, (0, 0, 0), 2)
+    cv2.circle(output, swag, 13, (0, 0, 255), -1)
+
     # filter out bubbles that don't have 3 in close y-axis proximity
     closest_x_axis = list(
         filter(
@@ -132,56 +136,47 @@ for pbub in potential_bubbles:
             potential_bubbles
         ),
     )
+    closest_y_axis = sorted(
+        list(
+            filter(lambda x: abs(x["position"][1] -
+                   pbub["position"][1]) < 300, closest_x_axis)
+        ),
+        key=lambda x: abs(x["position"][1]-pbub["position"][1]),
+    )
 
-    # closest_x_axis_better = sorted(potential_bubbles, key=lambda x: abs(
-    #     x["position"][0] - pbub["position"][0]), reverse=False)
-    # print()
-    # print()
-    # print("TARGET:")
-    # print(pbub)
-    # print("5 closest:")
-    # bleh = closest_x_axis_better[:5]
-    # print("\n".join([str(x) for x in bleh]))
-    # temp_output = frame.copy()
-    # cv2.circle(temp_output, pbub["position"], 10, (0, 0, 0), -1)
-    # for x in bleh:
-    #     cv2.circle(temp_output, x["position"], 5, (0, 255, 255), -1)
-    # cv2.imwrite("tmp.png", temp_output)
-    # input()
-
-    closest_y_axis = list(filter(
-        lambda x: abs(x["position"][1]-pbub["position"][1]) < 200, closest_x_axis))
-
-    swag = (pbub["position"][0]-100, pbub["position"][1])
-    cv2.line(output, pbub["position"], swag, (0, 0, 0), 2)
-    if len(closest_x_axis) >= 4:
+    if len(closest_y_axis) >= 4:
+        pbub["buddies"] = closest_y_axis[1:4]
         potential_bubbles2.append(pbub)
-        cv2.circle(output, swag, pbub["radius"]//3, (0, 255, 0), -1)
+
+bubbles = []
+skip_is = set()
+for i, pbub in enumerate(potential_bubbles2):
+    if i in skip_is:
+        continue
+    # filter every bubble that has 3 other bubbles with similar average color
+    closest_bubbles = list(filter(lambda x:
+                                  (abs(x["color"][0] - pbub["color"][0])
+                                   + abs(x["color"][1] - pbub["color"][1])
+                                   + abs(x["color"][2] - pbub["color"][2])) < 5,
+                                  potential_bubbles2))[:4]
+
+    if len(closest_bubbles) == 4:
+        pbub["color_index"] = i
+        for x in closest_bubbles:
+            skip_is.add(potential_bubbles2.index(x))
+            bubbles.append(x)
+
+        bubbles.append(pbub)
     else:
-        cv2.putText(output, str(len(closest_x_axis)), swag, 0, 2, (0, 0, 0), 2)
         cv2.circle(output, swag, pbub["radius"]//3, (0, 0, 255), -1)
 
-for pbub in sorted(potential_bubbles2, key=lambda x: x["radius"]):
-    # filter every bubble that has 3 other bubbles with similar average color
-    closest_bubbles = sorted(potential_bubbles2,
-                             key=lambda x:
-                             abs(x["color"][0] - pbub["color"][0])
-                             + abs(x["color"][1] - pbub["color"][1])
-                             + abs(x["color"][2] - pbub["color"][2]),
-                             reverse=True)
+vials = {}
+for pbub in bubbles:
+    swag = (pbub["position"][0]-83, pbub["position"][1])
+    cv2.circle(output, swag, 13, (0, 255, 0), -1)
 
-    # print("Bubble:")
-    # print(pbub["color"])
-    # print()
-    # print("4 closest:")
-    # print(closest_bubbles[1])
-    # print(closest_bubbles[2])
-    # print(closest_bubbles[3])
-    # print(closest_bubbles[4])
-    # input()
-    for i in range(1):
-        cv2.line(output, pbub["position"],
-                 closest_bubbles[i+1]["position"], pbub["color"], 2)
+    for buddy in pbub["buddies"]:
+        cv2.line(output, pbub["position"], buddy["position"], (0, 0, 0), 2)
 
 # cv2.imshow("main", output)
 cv2.imwrite("output.png", output)
