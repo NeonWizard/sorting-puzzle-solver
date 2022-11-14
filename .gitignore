@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 output.png
 tmp.png
+.DS_Store
