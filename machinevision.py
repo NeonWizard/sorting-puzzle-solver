@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+import utils
+
 # cv2.namedWindow("main")
 # cv2.namedWindow("extra")
 
@@ -162,7 +164,7 @@ for i, pbub in enumerate(potential_bubbles2):
 
     if len(closest_bubbles) == 4:
         pbub["color_index"] = i
-        for x in closest_bubbles:
+        for x in closest_bubbles[1:]:
             skip_is.add(potential_bubbles2.index(x))
             bubbles.append(x)
 
@@ -170,13 +172,42 @@ for i, pbub in enumerate(potential_bubbles2):
     else:
         cv2.circle(output, swag, pbub["radius"]//3, (0, 0, 255), -1)
 
-vials = {}
-for pbub in bubbles:
+vials = []
+bubbles_visited = set()
+for i, pbub in enumerate(bubbles):
     swag = (pbub["position"][0]-83, pbub["position"][1])
     cv2.circle(output, swag, 13, (0, 255, 0), -1)
 
+    if i in bubbles_visited:
+        continue
+
+    bubbles_visited.add(i)
     for buddy in pbub["buddies"]:
+        bubbles_visited.add(bubbles.index(buddy))
+
+    vial = {"bubbles": [pbub], "height": pbub["position"][1]}
+    cv2.circle(output, pbub["position"], 10, (255, 0, 255), -1)
+    for buddy in pbub["buddies"]:
+        vial["bubbles"].append(buddy)
+        vial["height"] += buddy["position"][1]
         cv2.line(output, pbub["position"], buddy["position"], (0, 0, 0), 2)
+
+    vial["height"] /= 4
+    vials.append(vial)
+
+vials = sorted(vials, key=lambda x: x["height"])
+vial_rows = utils.cluster(vials, 50, key=lambda x: x["height"])
+
+vials = []
+for row in vial_rows:
+    row.sort(key=lambda x: x["bubbles"][0]["position"][0])
+    # print([x["bubbles"][0]["position"] for x in row])
+    vials += row
+
+for i, vial in enumerate(vials):
+    print(vial["bubbles"][0]["position"])
+    cv2.putText(output, f"#{i}", vial["bubbles"]
+                [0]["position"], 0, 2, (0, 0, 0), 2)
 
 # cv2.imshow("main", output)
 cv2.imwrite("output.png", output)
