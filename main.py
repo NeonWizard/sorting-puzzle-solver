@@ -1,8 +1,9 @@
 from state import State
 from problem import Problem
-
 import frontiers
 from algorithms import *
+
+import machinevision
 
 import time
 
@@ -35,6 +36,11 @@ def main():
     print("== Tired of using your brain to solve puzzles? Look no further. ==")
     print()
 
+    print("Would you like to load the puzzle from a file?")
+    filename = input(
+        "Type a filename, or leave blank to continue to manual input: ")
+    print()
+
     print("Which frontier?")
     print("\tDFF - Depth First")
     print("\tBFF - Breadth First")
@@ -51,9 +57,6 @@ def main():
         return
     print()
 
-    vials = int(input("How many vials (excluding 2 empty): "))
-    print()
-
     while True:
         inp = input("Verbose solution? (Y/N): ").lower()
         if inp == "y":
@@ -66,33 +69,43 @@ def main():
             print("Invalid option. Please try again.")
     print()
 
-    print("Type colors (space separated) from top of vial to bottom.")
-    print()
-    puzzle = []
-    verifyMap = {}
-    i = 0
-    while i < vials:
-        inp = input("Vial {} contents: ".format(i+1)).split()[::-1]
-        if len(inp) != 4:
-            print("Vial must contain 4 elements!")
-            continue
+    if not (filename.isspace() or filename == ""):
+        puzzle = machinevision.simplify_vials(
+            machinevision.get_vials(filename))
+    else:
+        vials = int(input("How many vials (excluding 2 empty): "))
+        print()
 
-        for x in inp:
-            verifyMap[x] = verifyMap.get(x, 0) + 1
+        print("Type colors (space separated) from top of vial to bottom.")
+        print()
+        puzzle = []
+        verifyMap = {}
+        i = 0
+        while i < vials:
+            inp = input("Vial {} contents: ".format(i+1)).split()[::-1]
+            if len(inp) != 4:
+                print("Vial must contain 4 elements!")
+                continue
 
-        puzzle.append(inp)
-        i += 1
+            for x in inp:
+                verifyMap[x] = verifyMap.get(x, 0) + 1
 
-    if not all([x == 4 for x in verifyMap.values()]):
-        print("Puzzle state is not valid.")
-        for key in verifyMap:
-            if verifyMap[key] != 4:
-                print("There are {} {} bubbles.".format(verifyMap[key], key))
-        return
+            puzzle.append(inp)
+            i += 1
+
+        if not all([x == 4 for x in verifyMap.values()]):
+            print("Puzzle state is not valid.")
+            for key in verifyMap:
+                if verifyMap[key] != 4:
+                    print("There are {} {} bubbles.".format(
+                        verifyMap[key], key))
+            return
+        print()
 
     puzzle += [[], []]  # add empty vials
 
-    print()
+    print(puzzle)
+
     print("Solving...")
     print()
     solve(puzzle, Graph, frontier, verbose)

@@ -207,7 +207,7 @@ def get_vials(filename, write_image=False):
 def simplify_vials(vials):
     out = []
     for vial in vials:
-        out.append([bubble["color_index"] for bubble in vial["bubbles"]])
+        out.append([bubble["color_index"] for bubble in vial["bubbles"][::-1]])
     return out
 
 
