@@ -1,56 +1,62 @@
 from node import Node
 
+
 class Graph:
-	def __init__(self, problem, frontier):
-		self.problem = problem
-		self.frontier = frontier
+    def __init__(self, problem, frontier):
+        self.problem = problem
+        self.frontier = frontier
 
-		self.numNodesGenerated = 0
-		self.maxNodesStored = 0
+        self.numNodesGenerated = 0
+        self.maxNodesStored = 0
 
-		self.closed = []
+        self.closed = []
 
-	def search(self):
-		self.numNodesGenerated = 0
-		self.maxNodesStored = 0
+    def search(self):
+        self.numNodesGenerated = 0
+        self.maxNodesStored = 0
 
-		problem = self.problem
+        problem = self.problem
 
-		root = Node(problem.initialState, None, 0, 0, problem.heuristic(problem.initialState))
-		self.frontier.insert(root)
-		self.closed = []
+        root = Node(problem.initialState, None, 0, 0,
+                    problem.heuristic(problem.initialState))
+        self.frontier.insert(root)
+        self.closed = []
 
-		while (not self.frontier.empty()):
-			node = self.frontier.remove()
-			if (node.state in self.closed): continue
+        while (not self.frontier.empty()):
+            node = self.frontier.remove()
+            if (node.state in self.closed):
+                continue
 
-			# print()
-			# if node.parent != None: print(str(node.parent.state))
-			# print(str(node.action))
-			# print(str(node.state))
-			# input()
+            # print()
+            # if node.parent != None: print(str(node.parent.state))
+            # print(str(node.action))
+            # print(str(node.state))
+            # input()
 
-			print("\r", end="")
-			print(f"Nodes generated: {self.numNodesGenerated}; ", end="")
-			print(f"Frontier size: {self.frontier.size()}; ", end="")
-			print(f"Current heuristic: {node.heuristic}", end="")
+            print("\r", end="")
+            print(f"Nodes generated: {self.numNodesGenerated}; ", end="")
+            print(f"Frontier size: {self.frontier.size()}; ", end="")
+            print(f"Current heuristic: {node.heuristic}", end="")
 
-			s1 = node.state
-			if (problem.goalTest(s1)):
-				return node
+            s1 = node.state
+            if (problem.goalTest(s1)):
+                return node
 
-			self.closed.append(node.state)
-			actions = problem.actions(s1)
-			for action in actions:
-				s2 = problem.result(s1, action)
-				if (s2 in self.closed): continue
+            self.closed.append(node.state)
+            actions = problem.actions(s1)
+            for action in actions:
+                s2 = problem.result(s1, action)
+                if (s2 in self.closed):
+                    continue
 
-				new_node = Node(s2, node, action, node.totalDepth + 1, problem.heuristic(s2))
+                new_node = Node(s2, node, action,
+                                node.totalDepth + 1, problem.heuristic(s2))
 
-				self.frontier.insert(new_node)
-				node.addChild(new_node)
+                self.frontier.insert(new_node)
+                node.addChild(new_node)
 
-				self.numNodesGenerated += 1
-				self.maxNodesStored = max(self.maxNodesStored, len(self.closed) + self.frontier.size())
+                self.numNodesGenerated += 1
+                self.maxNodesStored = max(self.maxNodesStored, len(
+                    self.closed) + self.frontier.size())
 
-		return False
+        return False

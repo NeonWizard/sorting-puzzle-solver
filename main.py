@@ -104,8 +104,6 @@ def main():
 
     puzzle += [[], []]  # add empty vials
 
-    print(puzzle)
-
     print("Solving...")
     print()
     solve(puzzle, Graph, frontier, verbose)
