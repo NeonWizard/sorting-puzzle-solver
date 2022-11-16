@@ -5,8 +5,9 @@ import copy
 
 class State:
     def __init__(self, vials):
-        self.vials = copy.deepcopy(vials)
+        self.vials = tuple([tuple(x) for x in copy.deepcopy(vials)])
         self._heuristic = None
+        self._hash = None
 
     # - display function
     def __str__(self):
@@ -23,6 +24,11 @@ class State:
 
     def __eq__(self, rhs):
         return self.vials == rhs.vials
+
+    def __hash__(self):
+        if self._hash == None:
+            self._hash = hash(self.vials)
+        return self._hash
 
     def heuristic(self):
         if self._heuristic:

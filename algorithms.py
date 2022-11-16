@@ -9,7 +9,7 @@ class Graph:
         self.numNodesGenerated = 0
         self.maxNodesStored = 0
 
-        self.closed = []
+        self.closed = set()
 
     def search(self):
         self.numNodesGenerated = 0
@@ -20,7 +20,7 @@ class Graph:
         root = Node(problem.initialState, None, 0, 0,
                     problem.heuristic(problem.initialState))
         self.frontier.insert(root)
-        self.closed = []
+        self.closed = set()
 
         while (not self.frontier.empty()):
             node = self.frontier.remove()
@@ -42,7 +42,7 @@ class Graph:
             if (problem.goalTest(s1)):
                 return node
 
-            self.closed.append(node.state)
+            self.closed.add(node.state)
             actions = problem.actions(s1)
             for action in actions:
                 s2 = problem.result(s1, action)
